@@ -33,7 +33,7 @@ const Form = () => {
 
     try {
       const response = await fetch(
-        `http://api.weatherapi.com/v1/current.json?key=f951e0dc82444956b2c123630232206&q=${city}&aqi=no`
+        `https://api.weatherapi.com/v1/current.json?key=f951e0dc82444956b2c123630232206&q=${city}&aqi=no`
       );
       const data = await response.json();
       console.log(data);
