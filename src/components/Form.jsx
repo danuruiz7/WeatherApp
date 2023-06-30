@@ -1,7 +1,10 @@
 import "./Form.css";
 import { useState } from "react";
+import Loader from "./Loader";
 
 const Form = () => {
+  const [loadind, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [city, setCity] = useState("");
   const [grados, setGrados] = useState(true);
   const [data, setData] = useState({
@@ -28,15 +31,19 @@ const Form = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // console.log("haciendo submit");
-    // console.log(city);
 
+    if (city === "") {
+      setError(true);
+      console.log(city);
+      return;
+    }
+    setLoading(true);
     try {
       const response = await fetch(
         `https://api.weatherapi.com/v1/current.json?key=f951e0dc82444956b2c123630232206&q=${city}&aqi=no`
       );
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setData({
         country: data.location.country,
         name: data.location.name,
@@ -53,6 +60,8 @@ const Form = () => {
       console.log(error);
     }
     setCity("");
+    setLoading(false);
+    setError(false);
   };
 
   const hora = new Date(data.localtime_epoch * 1000);
@@ -73,9 +82,22 @@ const Form = () => {
           value={city}
           onChange={(e) => setCity(e.target.value)}
         />
-
+        {error && (
+          <p
+            style={{
+              backgroundColor: "red",
+              padding: "2px 6px",
+              borderRadius: "5px",
+              fontSize: "12px",
+              margin: "5px",
+            }}
+          >
+            Por favor ingresa una ciudad
+          </p>
+        )}
         <input type="submit" value="Buscar" />
       </form>
+      {loadind && <Loader />}
       {data.name && (
         <div className="data">
           <div className="container-icon-titulo">
